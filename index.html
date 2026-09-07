@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f6f4ef">
+<title>itspomme</title>
+<style>
+:root{
+  --bg:#f6f4ef;
+  --surface:rgba(255,255,255,.72);
+  --surface-strong:#fbfaf7;
+  --text:#1b1d20;
+  --muted:#8e8f92;
+  --line:rgba(24,26,29,.085);
+  --stroke:rgba(24,26,29,.075);
+  --shadow:0 10px 30px rgba(42,38,31,.045),0 1px 0 rgba(255,255,255,.9) inset;
+  --shadow-hover:0 18px 40px rgba(42,38,31,.08),0 1px 0 rgba(255,255,255,.95) inset;
+  --chip:#eceae5;
+  --chip-text:#696a6d;
+  --accent:#202124;
+}
+[data-theme="dark"]{
+  --bg:#171819;
+  --surface:rgba(255,255,255,.055);
+  --surface-strong:#1d1f20;
+  --text:#f3f3f1;
+  --muted:#929497;
+  --line:rgba(255,255,255,.09);
+  --stroke:rgba(255,255,255,.07);
+  --shadow:none;
+  --shadow-hover:0 18px 42px rgba(0,0,0,.22);
+  --chip:#242628;
+  --chip-text:#b3b5b7;
+  --accent:#f1f1ef;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  min-height:100vh;
+  color:var(--text);
+  background:
+    radial-gradient(circle at 88% 3%,rgba(232,220,199,.30),transparent 22rem),
+    radial-gradient(circle at 6% 32%,rgba(255,255,255,.62),transparent 25rem),
+    var(--bg);
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","PingFang SC","Microsoft YaHei","Segoe UI",sans-serif;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+button,a{-webkit-tap-highlight-color:transparent}
+.shell{
+  width:min(1120px,calc(100% - 44px));
+  margin:0 auto;
+  padding:38px 0 76px;
+}
+.header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+}
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  text-decoration:none;
+  color:var(--text);
+  font-size:31px;
+  font-weight:680;
+  letter-spacing:-.055em;
+}
+.brand-mark{
+  width:11px;
+  height:11px;
+  border-radius:50%;
+  background:var(--accent);
+  box-shadow:0 0 0 5px rgba(30,31,32,.045);
+}
+.header-actions{display:flex;align-items:center;gap:10px}
+.theme-btn{
+  width:40px;height:40px;border:1px solid var(--stroke);border-radius:14px;
+  background:var(--surface);color:var(--muted);display:grid;place-items:center;
+  box-shadow:var(--shadow);cursor:pointer;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)
+}
+.theme-btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round}
+.tabs{
+  display:flex;
+  gap:8px;
+  margin:56px 0 48px;
+  overflow-x:auto;
+  scrollbar-width:none;
+  padding-bottom:2px;
+}
+.tabs::-webkit-scrollbar{display:none}
+.tab{
+  flex:0 0 auto;
+  height:38px;
+  padding:0 15px;
+  border:1px solid var(--stroke);
+  border-radius:12px;
+  background:rgba(255,255,255,.48);
+  color:var(--muted);
+  font:inherit;
+  font-size:13px;
+  font-weight:600;
+  letter-spacing:-.01em;
+  cursor:pointer;
+  transition:.18s ease;
+}
+[data-theme="dark"] .tab{background:rgba(255,255,255,.035)}
+.tab.active{background:var(--accent);color:var(--bg);border-color:transparent}
+.tab:hover{transform:translateY(-1px)}
+.group{margin-top:46px}
+.group[hidden]{display:none}
+.group-head{
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  align-items:center;
+  gap:14px;
+  margin-bottom:17px;
+}
+.group-title{
+  margin:0;
+  font-size:17px;
+  font-weight:680;
+  letter-spacing:-.025em;
+}
+.group-line{height:1px;background:var(--line)}
+.group-count{font-size:12px;font-weight:650;color:var(--muted);font-variant-numeric:tabular-nums}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.card{
+  position:relative;
+  min-height:102px;
+  display:flex;
+  align-items:center;
+  gap:14px;
+  padding:17px;
+  border:1px solid var(--stroke);
+  border-radius:18px;
+  background:var(--surface);
+  box-shadow:var(--shadow);
+  color:var(--text);
+  text-decoration:none;
+  overflow:hidden;
+  backdrop-filter:blur(18px) saturate(115%);
+  -webkit-backdrop-filter:blur(18px) saturate(115%);
+  transition:transform .18s ease,box-shadow .18s ease,background .18s ease,border-color .18s ease;
+}
+.card::after{
+  content:"";
+  position:absolute;
+  right:-24px;top:-30px;
+  width:86px;height:86px;border-radius:50%;
+  background:var(--glow,rgba(120,120,120,.05));
+  filter:blur(1px);
+  pointer-events:none;
+}
+.card.link-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-hover);background:var(--surface-strong)}
+.card-body{min-width:0;display:flex;flex-direction:column;gap:7px;position:relative;z-index:1}
+.card-title{font-size:15px;font-weight:650;letter-spacing:-.018em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-meta{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.meta-pill{
+  display:inline-flex;
+  align-items:center;
+  min-height:23px;
+  padding:0 8px;
+  border-radius:8px;
+  background:var(--chip);
+  color:var(--chip-text);
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:-.01em;
+}
+.icon{
+  width:48px;height:48px;flex:0 0 48px;border-radius:15px;
+  display:grid;place-items:center;position:relative;z-index:1;
+  border:1px solid rgba(255,255,255,.55);
+  box-shadow:0 5px 14px rgba(35,35,35,.06),0 1px 0 rgba(255,255,255,.8) inset;
+}
+[data-theme="dark"] .icon{border-color:rgba(255,255,255,.08);box-shadow:none}
+.icon svg{width:22px;height:22px}
+.i-black{background:#1f2022;color:#fff}
+.i-green{background:#e2f0e1;color:#283e2d}
+.i-purple{background:#ebe4f5;color:#654e8d}
+.i-blue{background:#e5eafb;color:#4e60ae}
+.i-cream{background:#f3eadb;color:#8e6b3e}
+.i-peach{background:#f4e5dc;color:#9b5e49}
+.i-lilac{background:#ece9f7;color:#625b87}
+.i-gray{background:#ebeae7;color:#5d5e61}
+.i-red{background:#f4dfdf;color:#b74343}
+.i-gold{background:#f2e8d2;color:#8a6a2f}
+.arrow{
+  margin-left:auto;
+  width:30px;height:30px;border-radius:10px;display:grid;place-items:center;
+  color:#aaa;background:rgba(127,127,127,.07);position:relative;z-index:1;
+  transition:.18s ease;
+}
+.link-card:hover .arrow{transform:translate(1px,-1px);color:var(--text)}
+.arrow svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.section-space{margin-top:58px}
+.memo-card{cursor:default}
+.private-card{--glow:rgba(142,126,188,.10)}
+.footer{height:34px}
+@media(max-width:920px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:620px){
+  body{background:radial-gradient(circle at 98% 0%,rgba(232,220,199,.25),transparent 17rem),var(--bg)}
+  .shell{width:calc(100% - 28px);padding:22px 0 52px}
+  .brand{font-size:28px}.brand-mark{width:9px;height:9px}
+  .theme-btn{width:38px;height:38px;border-radius:13px}
+  .tabs{margin:38px 0 35px;gap:7px}
+  .tab{height:36px;padding:0 14px;border-radius:11px;font-size:12.5px}
+  .group{margin-top:35px}.section-space{margin-top:45px}
+  .group-head{gap:11px;margin-bottom:14px}.group-title{font-size:16px}.group-count{font-size:11px}
+  .grid{grid-template-columns:1fr;gap:10px}
+  .card{min-height:88px;padding:14px 15px;border-radius:16px;gap:13px}
+  .icon{width:44px;height:44px;flex-basis:44px;border-radius:14px}.icon svg{width:20px;height:20px}
+  .card-title{font-size:15px}.meta-pill{font-size:10.5px;min-height:22px;padding:0 7px}
+  .arrow{width:28px;height:28px;border-radius:9px}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <header class="header">
+    <a class="brand" href="#" aria-label="itspomme"><span class="brand-mark"></span><span>itspomme</span></a>
+    <div class="header-actions">
+      <button class="theme-btn" id="themeToggle" aria-label="切换主题">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path></svg>
+      </button>
+    </div>
+  </header>
+
+  <nav class="tabs" aria-label="分类">
+    <button class="tab active" data-filter="all">全部</button>
+    <button class="tab" data-filter="sites">站点</button>
+    <button class="tab" data-filter="domains">域名</button>
+    <button class="tab" data-filter="renewals">续费</button>
+    <button class="tab" data-filter="private">私人</button>
+  </nav>
+
+  <main>
+    <section class="group" data-category="sites">
+      <div class="group-head"><h2 class="group-title">我的站点</h2><span class="group-line"></span><span class="group-count">04</span></div>
+      <div class="grid">
+        <a class="card link-card" href="https://xiazhouqi7.com" target="_blank" rel="noopener" style="--glow:rgba(35,35,35,.08)">
+          <span class="icon i-black"><strong style="font-size:14px;letter-spacing:-.04em">X7</strong></span>
+          <span class="card-body"><span class="card-title">xiazhouqi7.com</span></span>
+          <span class="arrow"><svg viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8"></path></svg></span>
+        </a>
+        <a class="card link-card" href="https://go.xiazhouqi7.com" target="_blank" rel="noopener" style="--glow:rgba(91,153,91,.11)">
+          <span class="icon i-green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 17 17 7M9 7h8v8"/></svg></span>
+          <span class="card-body"><span class="card-title">go.xiazhouqi7.com</span></span>
+          <span class="arrow"><svg viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8"></path></svg></span>
+        </a>
+        <a class="card link-card" href="https://clash.xiazhouqi7.com" target="_blank" rel="noopener" style="--glow:rgba(122,93,167,.10)">
+          <span class="icon i-purple"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="m12 4 7 4-7 4-7-4 7-4Z"/><path d="m5 12 7 4 7-4M5 16l7 4 7-4"/></svg></span>
+          <span class="card-body"><span class="card-title">clash.xiazhouqi7.com</span></span>
+          <span class="arrow"><svg viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8"></path></svg></span>
+        </a>
+        <a class="card link-card" href="https://v.xiazhouqi7.com" target="_blank" rel="noopener" style="--glow:rgba(76,96,174,.10)">
+          <span class="icon i-blue"><strong style="font-size:15px">V</strong></span>
+          <span class="card-body"><span class="card-title">v.xiazhouqi7.com</span></span>
+          <span class="arrow"><svg viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8"></path></svg></span>
+        </a>
+      </div>
+    </section>
+
+    <section class="group section-space" data-category="domains">
+      <div class="group-head"><h2 class="group-title">域名</h2><span class="group-line"></span><span class="group-count">03</span></div>
+      <div class="grid">
+        <div class="card memo-card" style="--glow:rgba(174,137,78,.10)">
+          <span class="icon i-cream"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="8"/><path d="M4 12h16M12 4c2.2 2.2 3.4 4.8 3.4 8S14.2 17.8 12 20c-2.2-2.2-3.4-4.8-3.4-8S9.8 6.2 12 4Z"/></svg></span>
+          <span class="card-body"><span class="card-title">itspomme.cn</span><span class="card-meta"><span class="meta-pill">微信</span><span class="meta-pill">一泽</span></span></span>
+        </div>
+        <div class="card memo-card" style="--glow:rgba(155,94,73,.09)">
+          <span class="icon i-peach"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="8"/><path d="M4 12h16M12 4c2.2 2.2 3.4 4.8 3.4 8S14.2 17.8 12 20c-2.2-2.2-3.4-4.8-3.4-8S9.8 6.2 12 4Z"/></svg></span>
+          <span class="card-body"><span class="card-title">xiazhouqi7.com</span><span class="card-meta"><span class="meta-pill">微信</span><span class="meta-pill">下周七</span></span></span>
+        </div>
+        <div class="card memo-card" style="--glow:rgba(99,91,135,.09)">
+          <span class="icon i-lilac"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="8"/><path d="M4 12h16M12 4c2.2 2.2 3.4 4.8 3.4 8S14.2 17.8 12 20c-2.2-2.2-3.4-4.8-3.4-8S9.8 6.2 12 4Z"/></svg></span>
+          <span class="card-body"><span class="card-title">itsmingze.com</span><span class="card-meta"><span class="meta-pill">阿里云</span></span></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="group section-space" data-category="renewals">
+      <div class="group-head"><h2 class="group-title">续费</h2><span class="group-line"></span><span class="group-count">02</span></div>
+      <div class="grid">
+        <div class="card memo-card" style="--glow:rgba(80,80,80,.08)">
+          <span class="icon i-gray"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="8"/><path d="M9.2 8.2c1.9-1.2 4.8-.4 5.5 1.7.7 2.1-.9 4.4-3.1 4.4-1.7 0-3.1-1.3-3.1-3 0-1.2.7-2.3 1.8-2.8"/></svg></span>
+          <span class="card-body"><span class="card-title">ChatGPT</span><span class="card-meta"><span class="meta-pill">itspomme9</span><span class="meta-pill">土耳其</span></span></span>
+        </div>
+        <div class="card memo-card" style="--glow:rgba(183,67,67,.09)">
+          <span class="icon i-red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="6.5" width="16" height="11" rx="3"/><path d="m10 9.5 5 2.5-5 2.5v-5Z" fill="currentColor" stroke="none"/></svg></span>
+          <span class="card-body"><span class="card-title">YouTube Premium</span><span class="card-meta"><span class="meta-pill">itspomme3</span><span class="meta-pill">印度</span></span></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="group section-space" data-category="private">
+      <div class="group-head"><h2 class="group-title">私人</h2><span class="group-line"></span><span class="group-count">01</span></div>
+      <div class="grid">
+        <a class="card link-card private-card" href="https://hub.itspomme.cn" target="_blank" rel="noopener">
+          <span class="icon i-lilac"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="5" y="10" width="14" height="10" rx="3"/><path d="M8 10V8a4 4 0 0 1 8 0v2"/></svg></span>
+          <span class="card-body"><span class="card-title">hub.itspomme.cn</span></span>
+          <span class="arrow"><svg viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8"></path></svg></span>
+        </a>
+      </div>
+    </section>
+    <div class="footer"></div>
+  </main>
+</div>
+<script>
+const tabs=[...document.querySelectorAll('.tab')];
+const groups=[...document.querySelectorAll('.group')];
+const themeToggle=document.getElementById('themeToggle');
+function filterGroups(filter){
+  groups.forEach(group=>group.hidden=filter!=='all'&&group.dataset.category!==filter);
+}
+tabs.forEach(tab=>tab.addEventListener('click',()=>{
+  tabs.forEach(t=>t.classList.remove('active'));
+  tab.classList.add('active');
+  filterGroups(tab.dataset.filter);
+}));
+try{
+  const saved=localStorage.getItem('itspomme-theme');
+  if(saved==='dark'||saved==='light') document.documentElement.dataset.theme=saved;
+  else if(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches) document.documentElement.dataset.theme='dark';
+}catch(e){}
+themeToggle.addEventListener('click',()=>{
+  const next=document.documentElement.dataset.theme==='dark'?'light':'dark';
+  document.documentElement.dataset.theme=next;
+  try{localStorage.setItem('itspomme-theme',next)}catch(e){}
+});
+</script>
+</body>
+</html>
